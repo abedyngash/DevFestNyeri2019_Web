@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content"></div>
+  </div>
+</div>
+<div class="float-right">
+	<div class="row">
+
+		<a class="btn btn-primary" href="{% url 'generate-pdf' %}"> Get PDF</a>
+		
+		<button class="signup-btn btn btn-primary mr-3" type="button" name="button">Sign up New user</button>
+
+		{% if user.is_authenticated %}
+			<p><span class="fa fa-user"></span>{{user.username}}</p>
+			<a href="{% url 'logout' %}">Logout</a>
+			{% else %}
+			<button class="login-btn btn btn-primary" type="button" name="button">
+	            <span class="fa fa-plus mr-2"></span>
+	            Login
+	        </button>
+		{% endif %}
+		
+	</div>
+</div>
+<h2>Blogs</h2>
+	<div class="mt-3">
+		<button class="create-blog btn btn-primary" type="button" name="button">
+            <span class="fa fa-plus mr-2"></span>
+            Create Blog
+        </button>
+	</div>
+	<form method="get" class="form-inline">	
+		{{filter.form.author|as_crispy_field}}
+		<button type="submit" class="btn btn-primary">Submit</button>			
+	</form>
+	{% for blog in filter.qs  %}
+	<div class="mt-3 mb-2">		
+		<div class="card">
+			<div class="card-header">
+				{{blog.title}} - By {{blog.author}}
+				<div class="float-right">
+					<button type="button" class="read-blog btn btn-sm btn-primary" data-id="{% url 'blog-detail' blog.pk %}">
+	                  <span class="fa fa-eye"></span>
+	                </button>
+	                <button type="button" class="update-blog btn btn-sm btn-primary" data-id="{% url 'blog-update' blog.pk %}">
+	                  <span class="fa fa-pencil"></span>
+	                </button>
+	                <button type="button" class="delete-blog btn btn-sm btn-danger" data-id="{% url 'blog-delete' blog.pk %}">
+	                  <span class="fa fa-trash"></span>
+	                </button>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+
+		
+	{% endfor %}
+
+	<script>
+		$(document).ready(function() {
+
+			$(".login-btn").modalForm({
+				formURL: "{% url 'login' %}"
+			})
+
+		    $(".create-blog").modalForm({
+		        formURL: "{% url 'blog-create' %}"
+		    });
+		    $(".signup-btn").modalForm({
+		        formURL: "{% url 'signup' %}"
+		    });
+		    $(".update-blog").each(function () {
+	        	$(this).modalForm({formURL: $(this).data('id')});
+	      	});
+	      	$(".read-blog").each(function () {
+	        	$(this).modalForm({formURL: $(this).data('id')});
+	      	});
+	      	$(".delete-blog").each(function () {
+	        	$(this).modalForm({formURL: $(this).data('id')});
+	      	});
+	      	$(".alert").fadeTo(2000, 500).slideUp(500, function(){
+		        $(".alert").slideUp(500);
+		    });
+		});
+	</script>
+		
+{% endblock content %}
