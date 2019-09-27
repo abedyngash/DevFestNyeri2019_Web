@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'blog.apps.BlogConfig',
 
+    'corsheaders',
     'crispy_forms',
     'bootstrap_modal_forms',
     'widget_tweaks',
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -134,5 +136,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGOUT_URL = 'logout'
 
 LOGIN_REDIRECT_URL = 'home'
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 django_heroku.settings(locals())
